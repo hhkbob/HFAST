@@ -6,14 +6,17 @@ fileToolBar::fileToolBar(QMenu *File)
     //  初始化动作
     setWorkDir = new QAction(tr("Set working directory"));
     readProj = new QAction(tr("Read project (*.json)"));
+    savePr = new QAction(tr("Save project"));
 
     //  槽函数链接
     connect(setWorkDir, SIGNAL(triggered()), this, SLOT(setWDTrigger()));
     connect(readProj, SIGNAL(triggered()), this, SLOT(readProject()));
 
+
     //  放置动作按钮
     File->addAction(setWorkDir);
     File->addAction(readProj);
+    File->addAction(savePr);
 }
 
 fileToolBar::~fileToolBar()
@@ -27,8 +30,9 @@ void fileToolBar::setWDTrigger()
     filePath = QFileDialog::getExistingDirectory(
                 this, tr("Please choose a directorey")
                 );
-    basic bas;
-    bas.saveProject(filePath);
+
+    //  设置当前工作目录
+    QDir::setCurrent(filePath);
 }
 
 void fileToolBar::readProject()

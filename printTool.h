@@ -35,7 +35,13 @@
 #include <QString>
 #include <fstream>
 #include <iostream>
+#include "basic.h"
+#include "QLineEdit"
 using namespace std;
+struct GRAVITY
+{
+    QString gxyz[3];
+};
 
 class printTool
 {
@@ -48,12 +54,20 @@ public:
     /**
     * @brief  打印OpenFOAM文件的文件头
     */
-    void printHeader(ofstream file, QString root, QString fileName, QString classV);
+    void printHeader(FILE *file, QString root, QString fileName, QString classV);
 
     /**
     * @brief 打印OpenFOAM文件的末尾
     */
-    void printFoot(ofstream file);
+    void printFoot(FILE *file);
+
+    void printGravity(GRAVITY g);
+
+public:
+    basic saveTool;
+
+private:
+    void initBasic();
 
 };
 

@@ -5,7 +5,7 @@
 #include <QMenu>
 #include <QFileDialog>
 #include <QAction>
-#include "basic.h"
+#include "printTool.h"
 
 class fileToolBar : public QWidget
 {
@@ -16,6 +16,9 @@ public:
 
     QString filePath;
 
+    //  保存工程文件
+    QAction *savePr;
+
 
 private:
     //  设置工作目录
@@ -23,6 +26,7 @@ private:
 
     //  读取工程文件设置
     QAction *readProj;
+
 
 signals:
     void triggered();

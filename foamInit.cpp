@@ -19,7 +19,7 @@ int foamInit::newCase(QString casePath, QString loc)
     mes.title = "Warning";
     if(! isExist(ZeroPath))
     {
-A:      mes.Mess = "0 folder does not exist. Create or abort?";
+A:      mes.Mess = "The path: " +casePath +"\n0 folder does not exist. Create or abort?";
         int mark = HFASTError.HFASTWarning(mes);
         if(mark == 1)
         {
@@ -31,7 +31,7 @@ A:      mes.Mess = "0 folder does not exist. Create or abort?";
     }
     if(! isExist(conPath))
     {
-B:      mes.Mess = "constant folder does not exist. Create or abort?";
+B:      mes.Mess = "The path: " +casePath +"\nconstant folder does not exist. Create or abort?";
         int mark = HFASTError.HFASTWarning(mes);
         if(mark ==1)
         {
@@ -43,7 +43,7 @@ B:      mes.Mess = "constant folder does not exist. Create or abort?";
     }
     if(! isExist(sysPath))
     {
-C:      mes.Mess = "system folder does not exist. Create or abort?";
+C:      mes.Mess = "The path: " +casePath +"\nsystem folder does not exist. Create or abort?";
         int mark = HFASTError.HFASTWarning(mes);
         if(mark == 1)
         {

@@ -1,22 +1,31 @@
 #include "basic.h"
 #include "QTextStream"
 #include "QFile"
-#include "error.h"
 #include "QDebug"
 
 basic::basic(QObject *parent) : QObject(parent)
 {
-
+    Version = VERSION;
 }
 
-void basic::saveProject(QString path)
+void basic::saveProject
+(
+    QString path,
+    QString g[]
+)
 {
     //  保存当前路径以及版本信息
     savePath(path);
 
+    //  保存gravity信息
+    gravityObj.insert("gravityX", g[0]);
+    gravityObj.insert("gravityY", g[1]);
+    gravityObj.insert("gravityZ", g[2]);
+
     //  定义根节点{}
     QJsonObject rootObj;
     rootObj.insert("pathAndVersion", pathAndVersion);
+    rootObj.insert("gravity", gravityObj);
 
     //  实例化对象
     QJsonDocument doc;
@@ -66,11 +75,39 @@ void basic::savePath(QString path)
     //  保存当前路径
     pathAndVersion.insert("workDir", path);
     pathAndVersion.insert("foamVersion", VERSION);
+
+    //  转换工作目录
+    QDir::setCurrent(path);
+
+    //  保存到系统里面
+    QString corePath = QCoreApplication::applicationDirPath()+"/work.ini";
+    FILE *data;
+J:  data = fopen(corePath.toLocal8Bit().data(), "w");
+    if(data==NULL)
+    {
+        error HFASTError;
+        Mess mes;
+        mes.Fun = "void basic::savePath(QString path)";
+        mes.Head = "basic.h";
+        mes.title = "Critical Error";
+        mes.Loc = "Save the current working path";
+        mes.Mess = "Cannot create the file in the core application directory";
+        int mark = HFASTError.HFASTCritical(mes);
+        if(mark == 1)
+            goto J;
+    }
+    else
+    {
+        fprintf(data, "%s", path.toLocal8Bit().data());
+        fclose(data);
+    }
 }
 
 void basic::readProject(QString path)
 {
     //  读取json文件
+    init.newCase(path, "void basic::readProject(QString path)");
+
     QString fileName = path + "/userPro.json";
     QFile file(fileName);
     int mark=0;
@@ -114,27 +151,49 @@ B:  if(!file.open(QIODevice::ReadOnly | QFile::Text))
         //  获取根
         QJsonObject rootObj = doc.object();
 
+        Mess mes;
+        mes.Fun = "void basic::readProject(QString path)";
+        mes.Head = "basic.h";
+        mes.title = "Critical Error";
+
         //  获取路径和版本号
         QJsonValue pathAndVersionV = rootObj.value("pathAndVersion");
         if(pathAndVersionV.type() == QJsonValue::Object)
         {
             pathAndVersion = pathAndVersionV.toObject();
-            workPath = pathAndVersion.value("workDir");
-            Version = pathAndVersion.value("foamVersion");
-            qDebug() << workPath.toString().toLocal8Bit().data()<<endl;
-            qDebug() << Version.toString().toLocal8Bit().data()<<endl;
+            workPath = pathAndVersion.value("workDir").toString();
+            Version = pathAndVersion.value("foamVersion").toString();
         }
         else
         {
-            error HFASTError;
-            Mess mes;
-            mes.Fun = "void basic::readProject(QString path)";
-            mes.Head = "basic.h";
-            mes.title = "Critical Error";
             mes.Loc = "Try to get the path and version";
             mes.Mess = "pathAndVersionV is not an object";
-            HFASTError.HFASTCritical(mes);
-            return;
+            readJsonValueErr(mes);
         }
+
+        //  获取重力设置
+        QJsonValue gV = rootObj.value("gravity");
+        if(gV.type() == QJsonValue::Object)
+        {
+            gravityObj = gV.toObject();
+            gravity[0] = gravityObj.value("gravityX").toString();
+            gravity[1] = gravityObj.value("gravityX").toString();
+            gravity[2] = gravityObj.value("gravityX").toString();
+            gravity[3] = gravityObj.value("gravityValue").toString();
+        }
+        else
+        {
+            mes.Loc = "Try to get the gravity value";
+            mes.Mess = "gV is not an object";
+            readJsonValueErr(mes);
+        }
+
     }
+}
+
+void basic::readJsonValueErr(Mess mes)
+{
+    error HFASTError;
+    HFASTError.HFASTCritical(mes);
+    return;
 }

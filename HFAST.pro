@@ -30,7 +30,9 @@ SOURCES += \
     error.cpp \
     foamInit.cpp \
     fileToolBar.cpp \
-    basic.cpp
+    basic.cpp \
+    generalPanel.cpp \
+    modelPage.cpp
 
 HEADERS += \
         HFAST.h \
@@ -38,7 +40,9 @@ HEADERS += \
     error.h \
     foamInit.h \
     fileToolBar.h \
-    basic.h
+    basic.h \
+    generalPanel.h \
+    modelPage.h
 
 FORMS += \
         HFAST.ui

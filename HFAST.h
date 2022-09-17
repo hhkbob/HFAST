@@ -32,8 +32,14 @@
 #define HFAST_H
 
 #include <QMainWindow>
-#include <error.h>
-#include <QFileDialog>
+#include <QTextBrowser>
+#include <QGridLayout>
+#include "generalPanel.h"
+#include "modelPage.h"
+#include <QDockWidget>
+#include <QStackedLayout>
+#include <QSplitter>
+#include "fileToolBar.h"
 
 namespace Ui {
 class HFAST;
@@ -47,6 +53,8 @@ public:
     explicit HFAST(QWidget *parent = 0);
     ~HFAST();
     error HFASTError;
+    printTool *pEvent;
+    fileToolBar *fileBar;
 
     /**
     * @brief 初始化界面
@@ -55,9 +63,43 @@ public:
 
 private:
     Ui::HFAST *ui;
+    QMenu *File;
+    QMenu *Tool;
 
+    QGridLayout *gridLayout; //  网格布局
+    QVBoxLayout *vLayout; //  水平布局--整体的
+    QHBoxLayout *hLayout;  //  放置按钮
+    QHBoxLayout *viewLayout; //  放置文本和视图窗口
+    QStackedLayout *stackLayout; //  放置不同页面
+    QVBoxLayout *viewGroupLayout;
 
+    QWidget *wholeWidget;
+    generalPanel *gPanel;
+    modelPage *mPanel;
+    QWidget *gPanelPage;
+    QWidget *mPanelPage;
 
+    QTextBrowser *textEdit; //  文本编辑控件
+    QTextBrowser *mesView;  //  命令查看窗口
+    QDockWidget  *view;  //  核心展示窗口
+    QSplitter *Splitter1;
+    QSplitter *Splitter2;
+
+    QPushButton *runButton; //  运行按钮
+    QPushButton *checkButton; //  检查网格质量按钮
+    QPushButton *generalButton; //  常规按钮
+    QPushButton *modelButton;  //  模型按钮
+    QPushButton *materialButton;  //  材料按钮
+    QGroupBox *viewGroup;
+
+    /**
+     * @brief 添加界面按钮
+     */
+    void addLayout();
+
+private slots:
+    void setGeneralPanel();
+    void setModelPanel();
 };
 
 #endif // HFAST_H

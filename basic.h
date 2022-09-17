@@ -40,23 +40,33 @@
 #include <QJsonDocument>
 #include <QJsonValue>
 #include <QJsonParseError>
+#include <QDir>
+#include "QCoreApplication"
+#include "foamInit.h"
 
 class basic : public QObject
 {
     Q_OBJECT
 public:
     explicit basic(QObject *parent = nullptr);
+    QString Version;
+    QString gravity[4];
+    QString workPath;
+    foamInit init;
 
 public:
-    void saveProject(QString path);
+    void saveProject(QString path, QString g[]);
     void savePath(QString path);
     void readProject(QString path);
 
     QJsonObject pathAndVersion;
-    //QJsonObject paraObj;
+    QJsonObject gravityObj;
+    QJsonObject paraObj;
 private:
-    QJsonValue workPath;
-    QJsonValue Version;
+    QJsonValue para[4];
+
+private:
+    void readJsonValueErr(Mess mes);
 signals:
 
 public slots:
