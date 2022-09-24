@@ -9,6 +9,7 @@
 #include <QGroupBox>
 #include <QComboBox>
 #include <QSpinBox>
+#include <QStackedLayout>
 #include "printTool.h"
 
 class generalPanel : public QMainWindow
@@ -16,6 +17,7 @@ class generalPanel : public QMainWindow
     Q_OBJECT
 public:
     generalPanel(printTool *pEvent, QWidget *widget);
+    ~generalPanel();
 
 private:
     printTool *pEvent;
@@ -42,16 +44,37 @@ public:
     QLineEdit *gzLine;
     QSpinBox *paraNum;
     QComboBox *paraMet;
+    QLineEdit *paraSimpleN[4];
+    QLineEdit *paraHierarch[5];
+
 
 private:
     void setGravityGroup();
     void setParaGroup();
     void saveGravity();
 
+    QGroupBox *paraMG;
+    QStackedLayout *paraStackLt;
+    QHBoxLayout *simLayout;
+    QHBoxLayout *simLayout2;
+    QVBoxLayout *simVLayout;
+    QHBoxLayout *hLayout[3];
+    QVBoxLayout *hVLayout;
+    QLabel *simpleN;
+    QLabel *simpleDelta;
+    QLabel *hierarchN;
+    QLabel *hierarchDelta;
+    QLabel *hierarchOrder;
+    QWidget *simpleWidget;
+    QWidget *hWidget;
+    QPushButton *viewButton;
+
+
 signals:
 
 private slots:
     void saveProject();
+    void viewTriggered();
 
 };
 
